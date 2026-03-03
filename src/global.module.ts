@@ -1,5 +1,6 @@
 import { Module, Global } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { PrismaService } from './database/prisma/prisma.service';
 
 @Global()
 @Module({
@@ -8,8 +9,6 @@ import { ConfigModule } from '@nestjs/config';
             isGlobal: true,
         }),
     ],
-    providers: [
-        // AuthRestGuard,
-    ],
+    providers: [PrismaService],
 })
 export class GlobalModule {}
