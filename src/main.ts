@@ -14,13 +14,13 @@ async function bootstrap() {
     SwaggerModule.setup('api', app, document);
 
     const methods = ['GET', 'POST', 'PUT', 'OPTIONS', 'DELETE', 'PATCH'];
-    const urls = ['http://localhost:3000'];
+    const urls = ['http://localhost:3010'];
     app.enableCors({
         origin: urls,
         methods: methods,
         credentials: true,
     });
 
-    await app.listen(process.env.PORT ?? 3000);
+    await app.listen(process.env.PORT ?? 3010);
 }
 bootstrap();
