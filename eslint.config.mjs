@@ -1,39 +1,19 @@
-// @ts-check
-import eslint from '@eslint/js';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
-import globals from 'globals';
-import tseslint from 'typescript-eslint';
+import js from "@eslint/js";
 
-export default tseslint.config(
-  {
-    ignores: ['eslint.config.mjs'],
-  },
-  eslint.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
-  eslintPluginPrettierRecommended,
-  {
-    languageOptions: {
-      globals: {
-        ...globals.node,
-        ...globals.jest,
-      },
-      sourceType: 'commonjs',
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
-  },
-  {
-    rules: {
-      '@typescript-eslint/interface-name-prefix': 'off',
-      '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/explicit-module-boundary-types': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-      'comma-dangle': ['error', 'always-multiline'],
-      semi: ['error', 'always'],
-      'eol-last': ['error', 'always'],
-      indent: 'off',
-    },
-  },
-);
+export default [
+    js.configs.recommended,
+
+    {
+        files: ["**/*.js"],
+        languageOptions: {
+            ecmaVersion: "latest",
+            sourceType: "module",
+        },
+        rules: {
+            "no-unused-vars": "warn",
+            "no-console": "off",
+            "semi": ["error", "always"],
+            "quotes": ["error", "single"]
+        }
+    }
+];
