@@ -30,9 +30,7 @@ export class AuthService {
             role: user.role,
         };
 
-        return await this.jwtService.signAsync({
-            payload,
-        });
+        return await this.jwtService.signAsync(payload);
     }
 
     async signUp(
@@ -62,8 +60,6 @@ export class AuthService {
             role: savedUser.role,
         };
 
-        return await this.jwtService.signAsync({
-            payload,
-        });
+        return await this.jwtService.signAsync(payload);
     }
 }
