@@ -6,6 +6,9 @@ import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ExceptionsFilter } from './core/filters/exception-filter';
 import { RolesGuard } from './core/guards/roles.guard';
 import { PrismaExceptionFilter } from './common/exceptions/prisma.exception-filter';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './modules/user/user.module';
+import { JwtStrategy } from './auth/strategies/jwt.strategy';
 
 @Global()
 @Module({
@@ -24,8 +27,11 @@ import { PrismaExceptionFilter } from './common/exceptions/prisma.exception-filt
                 global: true,
             }),
         }),
+        AuthModule,
+        UserModule,
     ],
     providers: [
+        JwtStrategy,
         PrismaService,
         {
             provide: APP_FILTER,
@@ -44,5 +50,10 @@ import { PrismaExceptionFilter } from './common/exceptions/prisma.exception-filt
             useClass: RolesGuard,
         },
     ],
+    exports: [
+        PrismaService,
+        JwtModule,
+        JwtStrategy,
+    ]
 })
 export class GlobalModule {}
