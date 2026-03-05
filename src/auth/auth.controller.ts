@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Post, SerializeOptions } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, SerializeOptions } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SignInRequest } from './dto/requests/sign-in.request';
 import { AuthService } from './auth.service';
