@@ -9,7 +9,7 @@ export class UserRepository {
     constructor(private readonly prisma: PrismaService) {}
 
     async addUser(user: AuthUser): Promise<User> {
-        return this.prisma.user.create({ data: { ...user, role: ERole.User }});
+        return this.prisma.user.create({ data: { ...user, role: ERole.User } });
     }
 
     async getUser(userId: string): Promise<User | null> {
