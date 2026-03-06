@@ -50,10 +50,6 @@ import { JwtStrategy } from './auth/strategies/jwt.strategy';
             useClass: RolesGuard,
         },
     ],
-    exports: [
-        PrismaService,
-        JwtModule,
-        JwtStrategy,
-    ]
+    exports: [PrismaService, JwtModule, JwtStrategy],
 })
 export class GlobalModule {}

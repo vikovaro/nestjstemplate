@@ -12,7 +12,7 @@ async function main() {
             email: '1@gmail.com',
             phone: '+71112223344',
             role: ERole.Admin,
-        }
+        },
     });
 
     console.log('Seed data created successfully!');
