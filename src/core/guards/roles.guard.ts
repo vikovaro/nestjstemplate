@@ -19,13 +19,10 @@ export class RolesGuard implements CanActivate {
 
         const { user } = context.switchToHttp().getRequest();
 
-        console.log('User from request:', user); // Для отладки
-
         if (!user) {
-            throw new UnauthorizedException('Пользователь не авторизован');
+            throw new UnauthorizedException();
         }
 
-        // Проверяем наличие role в объекте user
         if (!user.role) {
             return false;
         }
