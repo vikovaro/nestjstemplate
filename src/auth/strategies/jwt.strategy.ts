@@ -20,6 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(payload: JwtPayload) {
+        console.log('JwtStrategy validate called with payload:', payload); // Должно вызываться при каждом запросе
         return {
             userId: payload.userId,
             role: payload.role,
