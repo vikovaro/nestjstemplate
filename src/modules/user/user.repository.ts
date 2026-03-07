@@ -18,6 +18,26 @@ export class UserRepository {
         });
     }
 
+    async updateUser(
+        userId: string,
+        username?: string,
+        email?: string,
+        phone?: string,
+        password?: string,
+    ): Promise<User> {
+        return this.prisma.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                username: username ? username : undefined,
+                email: email ? email : undefined,
+                phone: phone ? phone : undefined,
+                password: password ? password : undefined,
+            },
+        });
+    }
+
     async getAuthUser(username: string): Promise<AuthUser | null> {
         return this.prisma.user.findUnique({
             where: { username },
