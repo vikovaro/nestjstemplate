@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
@@ -7,6 +7,8 @@ import { TRole } from '../../common/types/role.type';
 export interface JwtPayload {
     userId: string;
     role: TRole;
+    token: string;
+    type: string;
 }
 
 @Injectable()
@@ -20,9 +22,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(payload: JwtPayload) {
+        if (payload.type === 'Refresh') {
+            throw new UnauthorizedException('Refresh token is not allowed for this endpoint');
+        }
+
         return {
             userId: payload.userId,
             role: payload.role,
+            token: payload.token,
         };
     }
 }

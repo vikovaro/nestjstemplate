@@ -1,8 +1,19 @@
-import { Body, Controller, Get, HttpStatus, Post, SerializeOptions } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    HttpStatus,
+    Post,
+    Req,
+    SerializeOptions,
+    UseGuards,
+} from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SignInRequest } from './dto/requests/sign-in.request';
 import { AuthService } from './auth.service';
 import { SignUpRequest } from './dto/requests/sign-up.request';
+import { TokensResponse } from './dto/responses/tokens.response';
+import { AuthRefreshRestGuard } from './guards/auth-refresh.guard';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -10,10 +21,10 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @Post('/login')
-    @ApiResponse({ status: HttpStatus.OK, description: 'login', type: String })
+    @ApiResponse({ status: HttpStatus.OK, description: 'login', type: TokensResponse })
     @SerializeOptions({
         strategy: 'exposeAll',
-        type: String,
+        type: TokensResponse,
         excludeExtraneousValues: true,
         enableImplicitConversion: true,
     })
@@ -21,11 +32,28 @@ export class AuthController {
         return await this.authService.signIn(signInDto.username, signInDto.password);
     }
 
-    @Post('/register')
-    @ApiResponse({ status: HttpStatus.OK, description: 'register', type: String })
+    @Post('/refresh')
+    @UseGuards(AuthRefreshRestGuard)
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'getting a pair of the new JWT tokens (access & refresh)',
+        type: TokensResponse,
+    })
     @SerializeOptions({
         strategy: 'exposeAll',
-        type: String,
+        type: TokensResponse,
+        excludeExtraneousValues: true,
+        enableImplicitConversion: true,
+    })
+    async refreshToken(@Req() req: Request) {
+        return await this.authService.refreshToken(req['data'].token);
+    }
+
+    @Post('/register')
+    @ApiResponse({ status: HttpStatus.OK, description: 'register', type: TokensResponse })
+    @SerializeOptions({
+        strategy: 'exposeAll',
+        type: TokensResponse,
         excludeExtraneousValues: true,
         enableImplicitConversion: true,
     })

@@ -4,15 +4,18 @@ import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from '../modules/user/user.repository';
 import { User } from '../modules/user/models/user.model';
 import { AuthUser } from '../modules/user/models/auth.user.model';
+import { TokensResponse } from './dto/responses/tokens.response';
+import { AuthRepository } from './auth.repository';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly userRepository: UserRepository,
+        private readonly authRepository: AuthRepository,
         private readonly jwtService: JwtService,
     ) {}
 
-    async signIn(username: string, password: string): Promise<string> {
+    async signIn(username: string, password: string): Promise<TokensResponse> {
         const user = await this.userRepository.getAuthUser(username);
 
         if (!user) {
@@ -24,13 +27,14 @@ export class AuthService {
         if (!isPasswordValid) {
             throw new UnauthorizedException('invalid-credentials');
         }
+        const tokens = await this.generateToken(user.id, user.role);
 
-        const payload = {
-            userId: user.id,
-            role: user.role,
+        await this.authRepository.updateSession(user.id, tokens.accessToken, tokens.refreshToken);
+
+        return {
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
         };
-
-        return await this.jwtService.signAsync(payload);
     }
 
     async signUp(
@@ -38,7 +42,7 @@ export class AuthService {
         password: string,
         email: string,
         phone: string,
-    ): Promise<string> {
+    ): Promise<TokensResponse> {
         const existingUser = await this.userRepository.getAuthUser(username);
 
         if (existingUser) {
@@ -55,11 +59,58 @@ export class AuthService {
 
         const savedUser = await this.userRepository.addUser(user);
 
-        const payload = {
-            userId: savedUser.id,
-            role: savedUser.role,
-        };
+        const tokens = await this.generateToken(savedUser.id, savedUser.role);
 
-        return await this.jwtService.signAsync(payload);
+        return {
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+        };
+    }
+
+    async refreshToken(refreshToken: string): Promise<TokensResponse> {
+        const session = await this.authRepository.getSessionByRefreshToken(refreshToken);
+        if (!session) {
+            throw new UnauthorizedException();
+        }
+
+        const user = (await this.userRepository.getUser(session.userId))!;
+
+        const tokens = await this.generateToken(user.id, user.role);
+
+        await this.authRepository.updateSession(user.id, tokens.accessToken, tokens.refreshToken);
+
+        return {
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+        };
+    }
+
+    async generateToken(userId: string, role: string) {
+        const [accessToken, refreshToken] = await Promise.all([
+            this.jwtService.signAsync(
+                {
+                    userId,
+                    role,
+                    type: 'Access',
+                    date: Date.now(),
+                },
+                {
+                    expiresIn: '10m',
+                },
+            ),
+            this.jwtService.signAsync(
+                {
+                    userId,
+                    role,
+                    type: 'Refresh',
+                    date: Date.now(),
+                },
+                {
+                    expiresIn: '30d',
+                },
+            ),
+        ]);
+
+        return { accessToken, refreshToken };
     }
 }
