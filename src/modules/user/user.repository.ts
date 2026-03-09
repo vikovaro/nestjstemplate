@@ -15,7 +15,7 @@ export class UserRepository {
         email: true,
         role: true,
         createdAt: true,
-    };
+    } as const;
 
     async addUser(user: AuthUser): Promise<User> {
         return this.prisma.user.create({
