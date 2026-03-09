@@ -7,6 +7,7 @@ import { NotFoundError } from 'rxjs';
 import { ERole } from '../../common/enums/role.enum';
 import { UpdateUserRequest } from './dto/requests/update-user.request';
 import * as argon2 from 'argon2';
+import { AppException } from '../../common/exceptions/app-exception';
 
 @Injectable()
 export class UserService {
@@ -42,6 +43,10 @@ export class UserService {
 
         if (requester.role != ERole.Admin && userId != requesterId) {
             throw new UnauthorizedException();
+        }
+
+        if (!updateData.email && !updateData.password && !updateData.phone && !updateData.username) {
+            throw new AppException('At least one field (email, password, phone, or username) must be provided for update');
         }
 
         const hashedPassword = updateData.password
