@@ -9,7 +9,6 @@ import { PrismaExceptionFilter } from './common/exceptions/prisma.exception-filt
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { JwtStrategy } from './auth/strategies/jwt.strategy';
-import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 
 @Global()
 @Module({
