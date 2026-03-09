@@ -9,13 +9,24 @@ datasource db {
 }
 
 model User {
-  id        String   @id @unique @default(uuid()) @db.Uuid
+  id        String   @id @default(uuid()) @db.Uuid
   username  String   @unique
   email     String
   phone     String
   password  String
   role      Role
   createdAt DateTime @default(now())
+  session   Session?
+}
+
+model Session {
+  id           String   @id @default(uuid()) @db.Uuid
+  accessToken  String   @unique
+  refreshToken String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userId       String   @unique @db.Uuid
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum Role {
