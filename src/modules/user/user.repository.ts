@@ -56,10 +56,4 @@ export class UserRepository {
             where: { username },
         });
     }
-
-    async getUserByUsername(username: string): Promise<User | null> {
-        return this.prisma.user.findUnique({
-            where: { username },
-        });
-    }
 }
