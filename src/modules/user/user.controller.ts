@@ -14,8 +14,8 @@ export class UserController {
     @Get('/getMe')
     @ApiOperation({ summary: 'get profile' })
     @ApiResponse({ type: UserResponse })
-    getProfile(@Req() req): Promise<UserResponse> {
-        return req.user;
+    async getProfile(@Req() req): Promise<UserResponse> {
+        return await this.userService.getUserById(req.user.userId);
     }
 
     @UseGuards(JwtAuthGuard)

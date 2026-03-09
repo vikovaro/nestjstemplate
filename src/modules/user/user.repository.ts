@@ -8,13 +8,26 @@ import { ERole } from '../../common/enums/role.enum';
 export class UserRepository {
     constructor(private readonly prisma: PrismaService) {}
 
+    private BASE_USER_SELECT = {
+        id: true,
+        username: true,
+        phone: true,
+        email: true,
+        role: true,
+        createdAt: true,
+    };
+
     async addUser(user: AuthUser): Promise<User> {
-        return this.prisma.user.create({ data: { ...user, role: ERole.User } });
+        return this.prisma.user.create({
+            data: { ...user, role: ERole.User },
+            select: this.BASE_USER_SELECT,
+        });
     }
 
     async getUser(userId: string): Promise<User | null> {
         return this.prisma.user.findUnique({
             where: { id: userId },
+            select: this.BASE_USER_SELECT,
         });
     }
 
