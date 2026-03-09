@@ -7,7 +7,7 @@ import { NotFoundError } from 'rxjs';
 import { ERole } from '../../common/enums/role.enum';
 import { UpdateUserRequest } from './dto/requests/update-user.request';
 import * as argon2 from 'argon2';
-import { AppException } from '../../common/exceptions/app-exception';
+import { AppException } from '../../core/exceptions/app-exception';
 
 @Injectable()
 export class UserService {

@@ -10,7 +10,7 @@ import {
     UnauthorizedException,
     NotFoundException,
 } from '@nestjs/common';
-import { AppException } from '../../common/exceptions/app-exception';
+import { AppException } from '../exceptions/app-exception';
 
 @Injectable()
 @Catch()

@@ -5,7 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ExceptionsFilter } from './core/filters/exception-filter';
 import { RolesGuard } from './core/guards/roles.guard';
-import { PrismaExceptionFilter } from './common/exceptions/prisma.exception-filter';
+import { PrismaExceptionFilter } from './core/exceptions/prisma.exception-filter';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { JwtStrategy } from './auth/strategies/jwt.strategy';
