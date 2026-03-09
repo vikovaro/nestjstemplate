@@ -21,6 +21,6 @@ export class UpdateUserRequest {
     @ApiProperty({ example: 'newpassword123', required: false })
     @IsString()
     @IsOptional()
-    @MinLength(6)
+    @MinLength(8)
     password?: string;
 }

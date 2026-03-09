@@ -45,8 +45,10 @@ export class UserService {
             throw new UnauthorizedException();
         }
 
-        if (!updateData.email && !updateData.password && !updateData.phone && !updateData.username) {
-            throw new AppException('At least one field (email, password, phone, or username) must be provided for update');
+        if (!updateData) {
+            throw new AppException(
+                'At least one field (email, password, phone, or username) must be provided for update',
+            );
         }
 
         const hashedPassword = updateData.password
