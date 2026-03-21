@@ -56,4 +56,10 @@ export class UserRepository {
             where: { username },
         });
     }
+
+    async getAuthUserByEmail(email: string): Promise<AuthUser | null> {
+        return this.prisma.user.findFirst({
+            where: { email },
+        });
+    }
 }
